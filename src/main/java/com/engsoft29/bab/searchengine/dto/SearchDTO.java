@@ -3,10 +3,13 @@ package com.engsoft29.bab.searchengine.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class SearchDTO implements Serializable {
 
 	private static final long serialVersionUID = 6435974476117737767L;

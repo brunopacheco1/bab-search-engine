@@ -1,6 +1,7 @@
 package com.engsoft29.bab.searchengine.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class Document implements Serializable {
 	private String url;
 	
 	private String summary;
+	
+	private BigDecimal pagerank;
 
 	private List<String> urls = new ArrayList<>();
 
@@ -52,6 +55,14 @@ public class Document implements Serializable {
 
 	public List<String> getUrls() {
 		return urls;
+	}
+
+	public BigDecimal getPagerank() {
+		return pagerank;
+	}
+
+	public void setPagerank(BigDecimal pagerank) {
+		this.pagerank = pagerank;
 	}
 
 	public void setUrls(List<String> urls) {

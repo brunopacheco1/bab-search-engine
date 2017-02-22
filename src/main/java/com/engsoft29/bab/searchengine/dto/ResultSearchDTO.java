@@ -44,4 +44,9 @@ public class ResultSearchDTO implements Serializable {
 	public void setResult(List<SearchDTO> result) {
 		this.result = result;
 	}
+	
+	public void add(SearchDTO dto) {
+		result.add(dto);
+		resultSize++;
+	}
 }
