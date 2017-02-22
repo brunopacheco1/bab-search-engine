@@ -56,10 +56,10 @@
 				<artifactId>wildfly-maven-plugin</artifactId>
 				<version>1.1.0.Alpha11</version>
 				<configuration>
-					<hostname>localhost</hostname>
+					<hostname>ec2-54-145-183-183.compute-1.amazonaws.com</hostname>
 					<port>9990</port>
 					<username>bab</username>
-					<password>bab</password>
+					<password>bab123</password>
 				</configuration>
 			</plugin>
 
@@ -71,6 +71,18 @@
 		</plugins>
 	</build>
 	<dependencies>
+
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>transport</artifactId>
+			<version>5.2.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.7</version>
+		</dependency>
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
@@ -94,18 +106,6 @@
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-jaxrs</artifactId>
 			<version>1.5.10</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.elasticsearch.client</groupId>
-			<artifactId>transport</artifactId>
-			<version>5.2.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.7</version>
 		</dependency>
 	</dependencies>
 </project>
