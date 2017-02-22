@@ -55,18 +55,18 @@ public class DocumentService {
 		Document document = new Document();
 
 		PropertyUtils.copyProperties(document, dto);
-		
+
 		List<String> children = new ArrayList<>();
-		for(String url : dto.getUrls()) {
+		for (String url : dto.getUrls()) {
 			Document child = new Document();
 			child.setId(hash(url));
 			child.setUrl(url);
 			child.setPagerank(BigDecimal.ONE);
-			
+
 			children.add(child.getId());
-			
+
 			client.prepareIndex("documents", "document", child.getId())
-				.setSource(JacksonConfig.getObjectMapper().writeValueAsString(child)).get();
+					.setSource(JacksonConfig.getObjectMapper().writeValueAsString(child)).get();
 		}
 
 		document.setChildren(children);
