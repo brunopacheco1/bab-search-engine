@@ -19,7 +19,7 @@ public class Document implements Serializable {
 	
 	private BigDecimal pagerank;
 
-	private List<String> urls = new ArrayList<>();
+	private List<String> children = new ArrayList<>();
 
 	public String getId() {
 		return id;
@@ -53,10 +53,6 @@ public class Document implements Serializable {
 		this.summary = summary;
 	}
 
-	public List<String> getUrls() {
-		return urls;
-	}
-
 	public BigDecimal getPagerank() {
 		return pagerank;
 	}
@@ -65,7 +61,11 @@ public class Document implements Serializable {
 		this.pagerank = pagerank;
 	}
 
-	public void setUrls(List<String> urls) {
-		this.urls = urls;
+	public List<String> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<String> children) {
+		this.children = children;
 	}
 }

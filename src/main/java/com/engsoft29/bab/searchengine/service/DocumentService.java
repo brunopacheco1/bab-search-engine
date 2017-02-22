@@ -5,6 +5,8 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -53,7 +55,21 @@ public class DocumentService {
 		Document document = new Document();
 
 		PropertyUtils.copyProperties(document, dto);
+		
+		List<String> children = new ArrayList<>();
+		for(String url : dto.getUrls()) {
+			Document child = new Document();
+			child.setId(hash(url));
+			child.setUrl(url);
+			child.setPagerank(BigDecimal.ONE);
+			
+			children.add(child.getId());
+			
+			client.prepareIndex("documents", "document", child.getId())
+				.setSource(JacksonConfig.getObjectMapper().writeValueAsString(child)).get();
+		}
 
+		document.setChildren(children);
 		document.setSummary(dto.getDocument().substring(0, Math.min(dto.getDocument().length(), 150)));
 		document.setId(hash(dto.getUrl()));
 		document.setPagerank(BigDecimal.ONE);
