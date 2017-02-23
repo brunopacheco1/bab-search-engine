@@ -37,7 +37,10 @@ public abstract class BABCrawler extends WebCrawler {
 
             List<String> children = new ArrayList<>();
 			for(WebURL child : links) {
-                children.add(child.getURL());
+			    if(shouldVisit(null, child)) {
+                    children.add(child.getURL());
+                }
+
 			}
 			
 			DocumentDTO document = new DocumentDTO();
@@ -70,6 +73,12 @@ public abstract class BABCrawler extends WebCrawler {
 		OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
 		wr.write(objectMapper.writeValueAsString(document));
 		wr.flush();
+		
+		int httpResult = con.getResponseCode();
+		
+		if (httpResult == HttpURLConnection.HTTP_OK) {
+			System.out.println("Status[" + httpResult + "]");
+		}
 	}
 	
 	public abstract String getSeed();
