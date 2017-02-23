@@ -8,18 +8,19 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
 public class CrawlerExecutor {
     public static void main(String[] args) throws Exception {
-		String crawlStorageFolder = "/data/crawl/root";
+		String crawlStorageFolder = "~/data/crawl/root";
 		int numberOfCrawlers = 7;
 
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(crawlStorageFolder);
+        config.setMaxDepthOfCrawling(10);
 
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
 		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
-
-		controller.addSeed(UOLCrawler.getSeed());
+        
+		controller.addSeed(new UOLCrawler().getSeed());
 
 		controller.start(UOLCrawler.class, numberOfCrawlers);
 	}
