@@ -21,6 +21,8 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
 import com.engsoft29.bab.searchengine.dto.DocumentDTO;
@@ -37,11 +39,15 @@ public class DocumentService {
 
 	@SuppressWarnings("resource")
 	@PostConstruct
-	private void init() throws Exception {
-		Settings settings = Settings.builder().put("cluster.name", "babSearchEngine").build();
-
-		client = new PreBuiltTransportClient(settings)
-				.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
+	private void init() {
+		try {
+			Settings settings = Settings.builder().put("cluster.name", "babSearchEngine").build();
+	
+			client = new PreBuiltTransportClient(settings)
+					.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@PreDestroy
@@ -104,10 +110,12 @@ public class DocumentService {
 	}
 
 	public ResultSearchDTO search(Integer start, Integer limit, String query) throws Exception {
-
+		if(StringUtils.isBlank(query)) {
+			return new ResultSearchDTO();
+		}
+		
 		SearchResponse response = client.prepareSearch().setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-				.setQuery(QueryBuilders.queryStringQuery(query)).setFrom(start).setSize(limit).setExplain(true).get();
-
+				.setQuery(QueryBuilders.queryStringQuery(query)).addSort(SortBuilders.fieldSort("pagerank").order(SortOrder.DESC)).setFrom(start).setSize(limit).setExplain(true).get();
 		ResultSearchDTO result = new ResultSearchDTO();
 		result.setTotalSize(response.getHits().getTotalHits());
 
