@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -59,15 +58,16 @@ public class DocumentService {
 		validar(dto);
 
 		Document document = new Document();
-
-		PropertyUtils.copyProperties(document, dto);
-
+		document.setChildren(dto.getUrls());
+		document.setDocument(dto.getDocument());
+		document.setUrl(dto.getUrl());
+		
 		List<String> children = new ArrayList<>();
 		for (String url : dto.getUrls()) {
 			Document child = new Document();
 			child.setId(hash(url));
 			child.setUrl(url);
-			child.setPagerank(BigDecimal.ONE);
+			child.setPagerank(BigDecimal.ZERO);
 
 			children.add(child.getId());
 
@@ -78,7 +78,7 @@ public class DocumentService {
 		document.setChildren(children);
 		document.setSummary(dto.getDocument().substring(0, Math.min(dto.getDocument().length(), 150)));
 		document.setId(hash(dto.getUrl()));
-		document.setPagerank(BigDecimal.ONE);
+		document.setPagerank(BigDecimal.ZERO);
 		client.prepareIndex("documents", "document", document.getId())
 				.setSource(JacksonConfig.getObjectMapper().writeValueAsString(document)).get();
 	}
@@ -115,7 +115,7 @@ public class DocumentService {
 		}
 		
 		SearchResponse response = client.prepareSearch().setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-				.setQuery(QueryBuilders.queryStringQuery(query)).addSort(SortBuilders.fieldSort("pagerank").order(SortOrder.DESC)).setFrom(start).setSize(limit).setExplain(true).get();
+				.setQuery(QueryBuilders.queryStringQuery(query)).setFrom(start).setSize(limit).setExplain(true).get();
 		ResultSearchDTO result = new ResultSearchDTO();
 		result.setTotalSize(response.getHits().getTotalHits());
 
