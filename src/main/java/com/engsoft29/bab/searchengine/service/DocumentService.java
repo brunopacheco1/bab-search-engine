@@ -1,105 +1,50 @@
 package com.engsoft29.bab.searchengine.service;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.InetAddress;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 import com.engsoft29.bab.searchengine.dto.DocumentDTO;
-import com.engsoft29.bab.searchengine.dto.ResultSearchDTO;
-import com.engsoft29.bab.searchengine.dto.SearchDTO;
-import com.engsoft29.bab.searchengine.entity.Document;
 import com.engsoft29.bab.searchengine.exception.AppException;
 import com.engsoft29.bab.searchengine.resource.JacksonConfig;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-@Stateless
+@Singleton
 public class DocumentService {
-
-	private TransportClient client;
-
-	@SuppressWarnings("resource")
+	
+	private Logger logger = Logger.getLogger(this.getClass().getName());
+	
+	private Producer<String, String> producer;
+	
 	@PostConstruct
 	private void init() {
-		try {
-			Settings settings = Settings.builder().put("cluster.name", "babSearchEngine").build();
-	
-			client = new PreBuiltTransportClient(settings)
-					.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Properties props = new Properties();
+	    props.put("bootstrap.servers", "localhost:9092");
+	    props.put("acks", "all");
+	    props.put("retries", 0);
+	    props.put("batch.size", 16384);
+	    props.put("linger.ms", 1);
+	    props.put("buffer.memory", 33554432);
+	    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+	    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+	    producer = new KafkaProducer<>(props);
 	}
-
+	
 	@PreDestroy
 	private void destroy() {
-		client.close();
+		producer.close();
 	}
-
-	public void processar(DocumentDTO dto) throws Exception {
-		validar(dto);
-
-		Document document = new Document();
-		document.setChildren(dto.getUrls());
-		document.setDocument(dto.getDocument());
-		document.setUrl(dto.getUrl());
-		
-		List<String> children = new ArrayList<>();
-		for (String url : dto.getUrls()) {
-			Document child = new Document();
-			child.setId(hash(url));
-			child.setUrl(url);
-			child.setPagerank(BigDecimal.ZERO);
-
-			children.add(child.getId());
-
-			client.prepareIndex("documents", "document", child.getId())
-					.setSource(JacksonConfig.getObjectMapper().writeValueAsString(child)).get();
-		}
-
-		document.setChildren(children);
-		document.setSummary(dto.getDocument().substring(0, Math.min(dto.getDocument().length(), 150)));
-		document.setId(hash(dto.getUrl()));
-		document.setPagerank(BigDecimal.ZERO);
-		client.prepareIndex("documents", "document", document.getId())
-				.setSource(JacksonConfig.getObjectMapper().writeValueAsString(document)).get();
-	}
-
-	private String hash(String text) throws NoSuchAlgorithmException {
-		MessageDigest m = MessageDigest.getInstance("MD5");
-
-		m.reset();
-		m.update(text.getBytes());
-		byte[] digest = m.digest();
-		BigInteger bigInt = new BigInteger(1, digest);
-		String hashtext = bigInt.toString(16);
-		// Now we need to zero pad it if you actually want the full 32 chars.
-		while (hashtext.length() < 32) {
-			hashtext = "0" + hashtext;
-		}
-
-		return hashtext;
-	}
-
-	private void validar(DocumentDTO dto) throws AppException {
+	
+	private void validate(DocumentDTO dto) throws AppException {
 		if (dto == null) {
 			throw new AppException("O documento é obrigatório.");
 		}
@@ -108,21 +53,15 @@ public class DocumentService {
 			throw new AppException("Os campos document e url são obrigatórios.");
 		}
 	}
-
-	public ResultSearchDTO search(Integer start, Integer limit, String query) throws Exception {
-		if(StringUtils.isBlank(query)) {
-			return new ResultSearchDTO();
-		}
+	
+	public void process(DocumentDTO dto) throws AppException {
+		validate(dto);
 		
-		SearchResponse response = client.prepareSearch().setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-				.setQuery(QueryBuilders.queryStringQuery(query)).setFrom(start).setSize(limit).setExplain(true).get();
-		ResultSearchDTO result = new ResultSearchDTO();
-		result.setTotalSize(response.getHits().getTotalHits());
-
-		for (SearchHit hit : response.getHits()) {
-			result.add(JacksonConfig.getObjectMapper().readValue(hit.sourceAsString(), SearchDTO.class));
+		try {
+			String json = JacksonConfig.getObjectMapper().writeValueAsString(dto);
+			producer.send(new ProducerRecord<String, String>("documents", json));
+		} catch (JsonProcessingException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
-
-		return result;
 	}
 }

@@ -100,5 +100,18 @@
 			<artifactId>swagger-jaxrs</artifactId>
 			<version>1.5.10</version>
 		</dependency>
+
+		<dependency>
+			<groupId>edu.uci.ics</groupId>
+			<artifactId>crawler4j</artifactId>
+			<version>4.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>0.10.1.1</version>
+		</dependency>
+
 	</dependencies>
 </project>

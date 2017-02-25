@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.engsoft29.bab.searchengine.dto.ResponseDTO;
 import com.engsoft29.bab.searchengine.dto.ResultSearchDTO;
-import com.engsoft29.bab.searchengine.service.DocumentService;
+import com.engsoft29.bab.searchengine.service.SearchService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiResponses;
 public class SearchResource {
 
 	@Inject
-	private DocumentService service;
+	private SearchService service;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

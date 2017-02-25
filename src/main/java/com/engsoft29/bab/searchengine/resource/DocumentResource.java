@@ -36,7 +36,7 @@ public class DocumentResource {
 	    @ApiResponse(code = 500, message = "Erro não esperado.", response = ResponseDTO.class)
 	})
 	public ResponseDTO send(@ApiParam(required=true, value="Hashtag que será processada.") DocumentDTO dto) throws Exception {
-		service.processar(dto);
+		service.process(dto);
 		
 		return new ResponseDTO(true);
 	}
