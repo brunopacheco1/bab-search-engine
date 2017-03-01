@@ -14,6 +14,9 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
 import com.engsoft29.bab.searchengine.dto.ResultSearchDTO;
@@ -105,7 +108,7 @@ public class SearchService {
 		}
 		
 		SearchResponse response = client.prepareSearch().setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-				.setQuery(QueryBuilders.queryStringQuery(query)).setFrom(start).setSize(limit).setExplain(true).get();
+				.setQuery(QueryBuilders.queryStringQuery(query)).setFrom(start).addSort(SortBuilders.fieldSort("pagerank").order(SortOrder.DESC)).setSize(limit).setExplain(true).get();
 		ResultSearchDTO result = new ResultSearchDTO();
 		result.setTotalSize(response.getHits().getTotalHits());
 
