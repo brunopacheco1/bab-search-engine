@@ -57,8 +57,8 @@ public abstract class BABCrawler extends WebCrawler {
 	}
 	
 	private void postDocument(DocumentDTO document) throws Exception {
-//	    String link = "http://ec2-54-145-183-183.compute-1.amazonaws.com/bab-search-engine/api/document";
-		String link = "http://localhost:8082/bab-search-engine/api/document";
+	    String link = "http://ec2-54-90-175-123.compute-1.amazonaws.com/bab-search-engine/api/document";
+//		String link = "http://localhost:8082/bab-search-engine/api/document";
 		URL object=new URL(link);
 
 		HttpURLConnection con = (HttpURLConnection) object.openConnection();
