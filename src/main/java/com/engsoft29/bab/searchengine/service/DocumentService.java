@@ -34,9 +34,6 @@ public class DocumentService {
 
 	@PostConstruct
 	private void init() {
-		System.setProperty("aws.accessKeyId", "AKIAIMA4TRYVHVLOPMAQ");
-		System.setProperty("aws.secretKey", "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");
-
 		KinesisProducerConfiguration config = new KinesisProducerConfiguration();
 
 		config.setRegion(REGION);
@@ -97,8 +94,7 @@ public class DocumentService {
 
 			return hashtext;
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 
 		return null;
