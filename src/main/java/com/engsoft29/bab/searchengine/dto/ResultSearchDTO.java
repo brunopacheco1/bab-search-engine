@@ -12,30 +12,11 @@ public class ResultSearchDTO implements Serializable {
 
 	private static final long serialVersionUID = 6435974476117737767L;
 	
-	@ApiModelProperty(value="Tamanho da página de pesquisa.", example="0")
-	private Long resultSize = 0l;
-	
-	@ApiModelProperty(value="Tamanho total da pesquisa.", example="0")
-	private Long totalSize = 0l;
+	@ApiModelProperty(value="Configuração da página")
+	private SearchPageDTO page;
 
 	@ApiModelProperty(value="Resultado da pesquisa.")
 	private List<SearchDTO> result = new ArrayList<>();
-
-	public Long getResultSize() {
-		return resultSize;
-	}
-
-	public void setResultSize(Long resultSize) {
-		this.resultSize = resultSize;
-	}
-
-	public Long getTotalSize() {
-		return totalSize;
-	}
-
-	public void setTotalSize(Long totalSize) {
-		this.totalSize = totalSize;
-	}
 
 	public List<SearchDTO> getResult() {
 		return result;
@@ -47,6 +28,13 @@ public class ResultSearchDTO implements Serializable {
 	
 	public void add(SearchDTO dto) {
 		result.add(dto);
-		resultSize++;
+	}
+
+	public SearchPageDTO getPage() {
+		return page;
+	}
+
+	public void setPage(SearchPageDTO page) {
+		this.page = page;
 	}
 }
