@@ -57,7 +57,7 @@ public abstract class BABCrawler extends WebCrawler {
 		}
 	}
 	
-	private void postDocument(DocumentDTO document) throws Exception {
+	protected void postDocument(DocumentDTO document) throws Exception {
 	    String link = "http://50.19.226.130/bab-search-engine/api/document";
 //		String link = "http://localhost:8082/bab-search-engine/api/document";
 		URL object=new URL(link);

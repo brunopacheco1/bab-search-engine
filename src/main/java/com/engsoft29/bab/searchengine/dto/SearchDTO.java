@@ -49,4 +49,12 @@ public class SearchDTO implements Serializable {
 	public void setPagerank(BigDecimal pagerank) {
 		this.pagerank = pagerank;
 	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 }

@@ -38,6 +38,21 @@ public class DocumentResource {
 	public ResponseDTO send(@ApiParam(required=true, value="Hashtag que será processada.") DocumentDTO dto) throws Exception {
 		service.process(dto);
 		
-		return new ResponseDTO(true);
+		return new ResponseDTO(true, "O documento foi recebido.");
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@ApiOperation(value = "Serviço de processamento dos documentos.")
+	@ApiResponses(value = {
+	    @ApiResponse(code = 200, message = "O job de pagerank foi submetido com sucesso.", response = ResponseDTO.class),
+	    @ApiResponse(code = 409, message = "O job de pagerank não foi submetido corretamente.", response = ResponseDTO.class),
+	    @ApiResponse(code = 500, message = "Erro não esperado.", response = ResponseDTO.class)
+	})
+	@Path("pagerank")
+	public ResponseDTO pagerank() throws Exception {
+		service.pagerank();
+		
+		return new ResponseDTO(true, "O job de pagerank foi submetido com sucesso.");
 	}
 }

@@ -59,7 +59,8 @@ public class DocumentService {
 			throw new AppException("O documento é obrigatório.");
 		}
 
-		if (StringUtils.isBlank(dto.getDocument()) || StringUtils.isBlank(dto.getTitle()) || StringUtils.isBlank(dto.getUrl())) {
+		if (StringUtils.isBlank(dto.getDocument()) || StringUtils.isBlank(dto.getTitle())
+				|| StringUtils.isBlank(dto.getUrl())) {
 			throw new AppException("Os campos document, title e url são obrigatórios.");
 		}
 	}
@@ -71,7 +72,7 @@ public class DocumentService {
 			String json = JacksonConfig.getObjectMapper().writeValueAsString(dto);
 
 			producer.addUserRecord(STREAM_NAME, hash(dto.getUrl()), ByteBuffer.wrap(json.getBytes()));
-			
+
 			producer.flush();
 		} catch (JsonProcessingException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
@@ -81,13 +82,14 @@ public class DocumentService {
 	private String hash(String text) {
 		try {
 			MessageDigest m = MessageDigest.getInstance("MD5");
-			
+
 			m.reset();
 			m.update(text.getBytes());
 			byte[] digest = m.digest();
 			BigInteger bigInt = new BigInteger(1, digest);
 			String hashtext = bigInt.toString(16);
-			// Now we need to zero pad it if you actually want the full 32 chars.
+			// Now we need to zero pad it if you actually want the full 32
+			// chars.
 			while (hashtext.length() < 32) {
 				hashtext = "0" + hashtext;
 			}
@@ -99,8 +101,15 @@ public class DocumentService {
 
 		return null;
 	}
-	
-	public void pagerank() {
-		
+
+	public void pagerank() throws Exception {
+		try {
+			Runtime rt = Runtime.getRuntime();
+			Process spark = rt.exec("/usr/lib/spark/bin/spark-submit --class com.engsoft29.bab.spark.consumer.PageRanking --deploy-mode cluster --master spark://ip-10-157-128-22:7077 /home/bitnami/document-consumer-1.0-jar-with-dependencies.jar");
+			spark.waitFor();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AppException("O job de pagerank não foi submetido corretamente: " + e.getMessage());
+		}
 	}
 }
