@@ -59,8 +59,8 @@ public class DocumentService {
 			throw new AppException("O documento é obrigatório.");
 		}
 
-		if (StringUtils.isBlank(dto.getDocument()) || StringUtils.isBlank(dto.getUrl())) {
-			throw new AppException("Os campos document e url são obrigatórios.");
+		if (StringUtils.isBlank(dto.getDocument()) || StringUtils.isBlank(dto.getTitle()) || StringUtils.isBlank(dto.getUrl())) {
+			throw new AppException("Os campos document, title e url são obrigatórios.");
 		}
 	}
 
@@ -98,5 +98,9 @@ public class DocumentService {
 		}
 
 		return null;
+	}
+	
+	public void pagerank() {
+		
 	}
 }

@@ -15,6 +15,9 @@ public class DocumentDTO implements Serializable {
 	@ApiModelProperty(value="Corpo em texto da página web capturada.", example="pagina web 123.")
 	private String document;
 	
+	@ApiModelProperty(value="Título da página web capturada.", example="pagina web 123.")
+	private String title;
+	
 	@ApiModelProperty(value="URL da página capturada.", example="http://www.pagina.com")
 	private String url;
 
@@ -43,5 +46,13 @@ public class DocumentDTO implements Serializable {
 
 	public void setUrls(List<String> urls) {
 		this.urls = urls;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }

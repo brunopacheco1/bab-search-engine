@@ -17,6 +17,9 @@ public class SearchDTO implements Serializable {
 	@ApiModelProperty(value="Resumo do corpo da página web capturada.", example="pagina web")
 	private String summary;
 	
+	@ApiModelProperty(value="Título da página web capturada.", example="pagina web")
+	private String title;
+	
 	@ApiModelProperty(value="URL da página capturada.", example="http://www.pagina.com")
 	private String url;
 
