@@ -44,8 +44,9 @@ public abstract class BABCrawler extends WebCrawler {
 			}
 			
 			DocumentDTO document = new DocumentDTO();
-			document.setDocument(htmlParseData.getText());
+			document.setDocument(htmlParseData.getHtml());
 			document.setUrls(children);
+			document.setTitle(htmlParseData.getTitle());
 			document.setUrl(url);
 			
 			try {
