@@ -24,6 +24,8 @@ public abstract class BABCrawler extends WebCrawler {
 	@Override
 	public boolean shouldVisit(Page referringPage, WebURL url) {
 		String href = url.getURL().toLowerCase();
+		href = href.split("\\?")[0];
+		
 		return !FILTERS.matcher(href).matches() && href.startsWith(getSeed());
 	}
 
@@ -58,8 +60,8 @@ public abstract class BABCrawler extends WebCrawler {
 	}
 	
 	protected void postDocument(DocumentDTO document) throws Exception {
-	    String link = "http://50.19.226.130/bab-search-engine/api/document";
-//		String link = "http://localhost:8082/bab-search-engine/api/document";
+//	    String link = "http://50.19.226.130/bab-search-engine/api/document";
+		String link = "http://localhost:8082/bab-search-engine/api/document";
 		URL object=new URL(link);
 
 		HttpURLConnection con = (HttpURLConnection) object.openConnection();

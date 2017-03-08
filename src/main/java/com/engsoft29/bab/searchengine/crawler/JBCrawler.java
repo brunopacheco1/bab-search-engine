@@ -14,11 +14,11 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
-public class UOLCrawler extends BABCrawler {
+public class JBCrawler extends BABCrawler {
     
     @Override
     public String getSeed() {
-        return "https://noticias.uol.com.br/";
+        return "http://jb.com.br";
     }
     
     @Override
@@ -30,7 +30,7 @@ public class UOLCrawler extends BABCrawler {
 			
 			Document doc = Jsoup.parse(htmlParseData.getHtml());
 			
-			String document = doc.select("article#conteudo-principal > div#texto > p").text();
+			String document = doc.select("div#HOTWordsTxt > p").text();
 			
 			String documentType = "NEWS";
 			if(StringUtils.isBlank(document)) {

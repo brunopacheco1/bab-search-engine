@@ -59,9 +59,9 @@ public class DocumentService {
 			throw new AppException("O documento é obrigatório.");
 		}
 
-		if (StringUtils.isBlank(dto.getDocument()) || StringUtils.isBlank(dto.getTitle())
+		if (StringUtils.isBlank(dto.getDocument()) || StringUtils.isBlank(dto.getDocumentType()) || StringUtils.isBlank(dto.getTitle())
 				|| StringUtils.isBlank(dto.getUrl())) {
-			throw new AppException("Os campos document, title e url são obrigatórios.");
+			throw new AppException("Os campos document, documentType, title e url são obrigatórios.");
 		}
 	}
 

@@ -20,6 +20,9 @@ public class DocumentDTO implements Serializable {
 	
 	@ApiModelProperty(value="URL da página capturada.", example="http://www.pagina.com")
 	private String url;
+	
+	@ApiModelProperty(value="Tipo da página capturada.", example="NEWS")
+	private String documentType = "NEWS";
 
 	@ApiModelProperty(value="Lista de urls encontrada na página capturada.")
 	private List<String> urls = new ArrayList<>();
@@ -54,5 +57,13 @@ public class DocumentDTO implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
 	}
 }

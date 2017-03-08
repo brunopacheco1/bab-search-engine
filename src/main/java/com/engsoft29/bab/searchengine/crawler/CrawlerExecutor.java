@@ -12,6 +12,7 @@ public class CrawlerExecutor {
 		int numberOfCrawlers = 7;
 
 		CrawlConfig config = new CrawlConfig();
+		config.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1");
 		config.setCrawlStorageFolder(crawlStorageFolder);
         config.setMaxDepthOfCrawling(10);
 
@@ -20,8 +21,8 @@ public class CrawlerExecutor {
 		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
         
-		controller.addSeed(new UOLCrawler().getSeed());
+		controller.addSeed(new JBCrawler().getSeed());
 
-		controller.start(UOLCrawler.class, numberOfCrawlers);
+		controller.start(JBCrawler.class, numberOfCrawlers);
 	}
 }
