@@ -52,7 +52,7 @@ public class SearchService {
 		}
 
 		SearchResponse response = client.prepareSearch().setIndices("documents")
-				.setQuery(QueryBuilders.queryStringQuery("document:(" + query +") AND documentType:NEWS")).setFrom((page - 1) * size)
+				.setQuery(QueryBuilders.queryStringQuery("(" + query +") AND documentType:NEWS")).setFrom((page - 1) * size)
 				.addSort(SortBuilders.fieldSort("pagerank").order(SortOrder.DESC)).setSize(size).setExplain(true)
 				.get();
 		
