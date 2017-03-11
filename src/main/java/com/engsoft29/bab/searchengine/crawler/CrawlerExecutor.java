@@ -21,8 +21,8 @@ public class CrawlerExecutor {
 		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
         
-		controller.addSeed(new JBCrawler().getSeed());
+		controller.addSeed(new UOLCrawler().getSeed());
 
-		controller.start(JBCrawler.class, numberOfCrawlers);
+		controller.start(UOLCrawler.class, numberOfCrawlers);
 	}
 }

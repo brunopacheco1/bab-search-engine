@@ -14,11 +14,11 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 
-public class JBCrawler extends BABCrawler {
+public class G1Crawler extends BABCrawler {
     
     @Override
     public String getSeed() {
-        return "http://jb.com.br";
+        return "http://g1.globo.com";
     }
     
     @Override
@@ -30,7 +30,7 @@ public class JBCrawler extends BABCrawler {
 			
 			Document doc = Jsoup.parse(htmlParseData.getHtml());
 			
-			String document = doc.select("div#HOTWordsTxt > p").text();
+			String document = doc.select("div.mc-column.content-text.active-extra-styles").text();
 			
 			String documentType = "NEWS";
 			if(StringUtils.isBlank(document)) {
@@ -45,7 +45,6 @@ public class JBCrawler extends BABCrawler {
 			    if(shouldVisit(null, child)) {
                     children.add(child.getURL());
                 }
-
 			}
 			
 			DocumentDTO documentDTO = new DocumentDTO();

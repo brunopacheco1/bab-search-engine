@@ -35,7 +35,7 @@ public class UOLCrawler extends BABCrawler {
 			String documentType = "NEWS";
 			if(StringUtils.isBlank(document)) {
 				documentType = "HTML";
-				document = htmlParseData.getHtml();
+				document = doc.select("body").text();
 			}
 			
 			Set<WebURL> links = htmlParseData.getOutgoingUrls();
